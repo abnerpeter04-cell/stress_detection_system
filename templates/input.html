@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Input Data</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="main-container">
+
+<div class="sidebar">
+
+<div class="logo">
+Stress Detection
+</div>
+
+<ul>
+<li><a href="/dashboard">Dashboard</a></li>
+<li><a href="/input">Input Data</a></li>
+<li><a href="/result">Prediction Result</a></li>
+<li><a href="/advice">Advice Center</a></li>
+</ul>
+
+</div>
+
+<div class="content">
+
+<div class="form-container">
+
+<h2>Input Your Data</h2>
+
+<br>
+
+<form action="/predict" method="POST">
+
+<div class="form-group">
+
+<label>Study Hours</label>
+
+<select name="study_hours">
+
+<option>1</option>
+<option>2</option>
+<option>3</option>
+<option>4</option>
+<option>5</option>
+<option>6</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+
+<label>Sleep Duration</label>
+
+<select name="sleep_hours">
+
+<option>3</option>
+<option>4</option>
+<option>5</option>
+<option>6</option>
+<option>7</option>
+<option>8</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+
+<label>Break Frequency</label>
+
+<select name="break_frequency">
+
+<option>1</option>
+<option>2</option>
+<option>3</option>
+<option>4</option>
+
+</select>
+
+</div>
+
+<button type="submit">
+
+Submit for Prediction
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

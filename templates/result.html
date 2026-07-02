@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+    <title>Prediction Result</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="main-container">
+
+    <!-- SIDEBAR -->
+
+    <div class="sidebar">
+
+        <div class="logo">
+
+            Stress Detection
+
+        </div>
+
+        <ul>
+
+            <li><a href="/dashboard">Dashboard</a></li>
+
+            <li><a href="/input">Input Data</a></li>
+
+            <li><a href="/history">Prediction History</a></li>
+
+            <li><a href="/advice">Advice Center</a></li>
+
+            <li><a href="/logout">Logout</a></li>
+
+        </ul>
+
+    </div>
+
+    <!-- CONTENT -->
+
+    <div class="content">
+
+        <div class="result-box">
+
+            <h1>Prediction Result</h1>
+
+            <br>
+
+            {% if prediction == "STRESSED" %}
+
+                <div class="result-status stressed">
+
+                    {{ prediction }}
+
+                </div>
+
+            {% else %}
+
+                <div class="result-status not-stressed">
+
+                    {{ prediction }}
+
+                </div>
+
+            {% endif %}
+
+            <br>
+
+            <h3>Recommendations</h3>
+
+            <br>
+
+            {% for item in recommendations %}
+
+                <p>✔ {{ item }}</p>
+
+                <br>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

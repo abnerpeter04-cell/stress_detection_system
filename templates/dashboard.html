@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<div class="main-container">
+
+    <div class="sidebar">
+        <div class="logo">
+            Stress Detection
+        </div>
+        <ul>
+    <li><a href="/dashboard">🏠 Dashboard</a></li>
+    <li><a href="/input">📝 Input Data</a></li>
+    <li><a href="/history">📊 Prediction History</a></li>
+    <li><a href="/advice">💡 Advice Center</a></li>
+    <li><a href="/chatbot">🤖 Assessment Agent</a></li>
+    <li><a href="/logout">🚪 Logout</a></li>
+</ul>
+    </div>
+
+    <div class="content">
+
+        <div class="topbar">
+            <h1>Dashboard</h1>
+            <p>Welcome, {{ username }}</p>
+        </div>
+
+        <div class="cards">
+            <div class="card">
+                <p>Total Assessments</p>
+                <h2>{{ total }}</h2>
+            </div>
+            <div class="card">
+                <p>Total Stressed</p>
+                <h2>{{ stressed }}</h2>
+            </div>
+            <div class="card">
+                <p>Total Not Stressed</p>
+                <h2>{{ not_stressed }}</h2>
+            </div>
+            <div class="card">
+                <p>Stress Rate</p>
+                <h2>{{ stress_rate }}%</h2>
+            </div>
+        </div>
+
+        <div class="chart-section">
+            <div class="chart-box">
+                <h3>Stress Overview</h3>
+                <br>
+                <canvas id="myChart"></canvas>
+            </div>
+
+            <div class="activity-box">
+                <h3>Recent Activities</h3>
+                <br>
+                {% for item in history %}
+                    <p>
+                        {{ item['date'] }} — {{ item['prediction'] }}
+                    </p>
+                    <br>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+// Safely pass Flask template variables to JavaScript variables
+const stressedCount = Number("{{ stressed }}") || 0;
+const notStressedCount = Number("{{ not_stressed }}") || 0;
+
+const ctx = document.getElementById('myChart');
+
+if (ctx) {
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Stressed', 'Not Stressed'],
+            datasets: [{
+                data: [stressedCount, notStressedCount],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+}
+</script>
+
+</body>
+</html>

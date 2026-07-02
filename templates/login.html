@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Login</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="auth-container">
+
+    <div class="auth-left">
+
+        <h1>Exam Stress Detection and Advisory System</h1>
+
+        <p>
+            A smart system designed to detect stress levels
+            during examination periods and provide personalized
+            recommendations for students.
+        </p>
+
+    </div>
+
+    <div class="auth-right">
+
+        <div class="auth-box">
+
+            <h2>Welcome Back!</h2>
+
+            <form action="/login" method="POST">
+
+                <div class="form-group">
+
+                    <label>Email</label>
+
+                    <input type="text"
+                    name="username">
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Password</label>
+
+                    <input type="password"
+                    name="password">
+
+                </div>
+
+                <button type="submit">
+                    Login
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
