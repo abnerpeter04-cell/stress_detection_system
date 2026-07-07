@@ -204,6 +204,35 @@ def dashboard():
         """,
         (username,)
     ).fetchone()[0]
+        # Recent Activities
+    history = conn.execute(
+        """
+        SELECT *
+        FROM predictions
+        WHERE username=?
+        ORDER BY id DESC
+        LIMIT 5
+        """,
+        (username,)
+    ).fetchall()
+
+    # Stress Rate
+    if total > 0:
+        stress_rate = round((stressed / total) * 100, 1)
+    else:
+        stress_rate = 0
+
+    conn.close()
+
+    return render_template(
+        "dashboard.html",
+        username=username,
+        total=total,
+        stressed=stressed,
+        not_stressed=not_stressed,
+        stress_rate=stress_rate,
+        history=history
+    )
 # =========================================
 # PREDICTION SYSTEM
 # =========================================
