@@ -400,36 +400,6 @@ def predict():
             "✅ Great job! Continue maintaining your healthy lifestyle and study habits."
         )
 
-    if health_level == "HIGH":
-        recommendations.append(
-            "😴 Improve your sleep schedule, eat balanced meals and exercise regularly."
-        )
-
-    if mental_level == "HIGH":
-        recommendations.append(
-            "🧠 Practice relaxation techniques and consider speaking with a counsellor."
-        )
-
-    if financial_level == "HIGH":
-        recommendations.append(
-            "💰 Seek financial assistance or improve budgeting to reduce financial stress."
-        )
-
-    if social_level == "HIGH":
-        recommendations.append(
-            "👨‍👩‍👧 Spend more time with supportive friends and family members."
-        )
-
-    if result == "STRESSED":
-        recommendations.append(
-            "🎯 Overall assessment indicates elevated stress. Consider visiting your university counselling centre if symptoms persist."
-        )
-
-    if len(recommendations) == 0:
-
-        recommendations.append(
-            "✅ Great job! Your responses suggest healthy stress management habits. Continue maintaining a balanced lifestyle."
-        )
     # ==========================
     # SAVE PREDICTION
     # ==========================
