@@ -3,15 +3,13 @@
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="viewport"
-    content="width=device-width, initial-scale=1.0">
+<title>Stress Assessment Report</title>
 
-    <title>Prediction Result</title>
-
-    <link rel="stylesheet"
-    href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet"
+href="{{ url_for('static', filename='style.css') }}">
 
 </head>
 
@@ -19,80 +17,149 @@
 
 <div class="main-container">
 
-    <!-- SIDEBAR -->
+<div class="sidebar">
 
-    <div class="sidebar">
+<div class="logo">
 
-        <div class="logo">
-
-            Stress Detection
-
-        </div>
-
-        <ul>
-
-            <li><a href="/dashboard">Dashboard</a></li>
-
-            <li><a href="/input">Input Data</a></li>
-
-            <li><a href="/history">Prediction History</a></li>
-
-            <li><a href="/advice">Advice Center</a></li>
-
-            <li><a href="/logout">Logout</a></li>
-
-        </ul>
-
-    </div>
-
-    <!-- CONTENT -->
-
-    <div class="content">
-
-        <div class="result-box">
-
-            <h1>Prediction Result</h1>
-
-            <br>
-
-            {% if prediction == "STRESSED" %}
-
-                <div class="result-status stressed">
-
-                    {{ prediction }}
-
-                </div>
-
-            {% else %}
-
-                <div class="result-status not-stressed">
-
-                    {{ prediction }}
-
-                </div>
-
-            {% endif %}
-
-            <br>
-
-            <h3>Recommendations</h3>
-
-            <br>
-
-            {% for item in recommendations %}
-
-                <p>✔ {{ item }}</p>
-
-                <br>
-
-            {% endfor %}
-
-        </div>
-
-    </div>
+Stress Detection System
 
 </div>
 
-</body>
+<ul>
 
-</html>
+<li><a href="/dashboard">Dashboard</a></li>
+<li><a href="/input">New Assessment</a></li>
+<li><a href="/history">History</a></li>
+<li><a href="/advice">Advice Centre</a></li>
+<li><a href="/chatbot">Chatbot</a></li>
+<li><a href="/logout">Logout</a></li>
+
+</ul>
+
+</div>
+
+<div class="content">
+
+<div class="result-box">
+
+<h1>🎓 Undergraduate Stress Assessment Report</h1>
+
+<hr>
+
+{% if prediction == "STRESSED" %}
+
+<div class="result-status stressed">
+
+🔴 <strong>{{ prediction }}</strong>
+
+</div>
+
+{% else %}
+
+<div class="result-status not-stressed">
+
+🟢 <strong>{{ prediction }}</strong>
+
+</div>
+
+{% endif %}
+
+<br>
+
+<h2>📊 Stress Assessment Summary</h2>
+
+<table class="summary-table">
+
+<tr>
+
+<th>Category</th>
+
+<th>Assessment</th>
+
+</tr>
+
+<tr>
+
+<td>📚 Academic Stress</td>
+
+<td>{{ academic_level }}</td>
+
+</tr>
+
+<tr>
+
+<td>😴 Health & Lifestyle</td>
+
+<td>{{ health_level }}</td>
+
+</tr>
+
+<tr>
+
+<td>🧠 Mental Wellbeing</td>
+
+<td>{{ mental_level }}</td>
+
+</tr>
+
+<tr>
+
+<td>💰 Financial Stress</td>
+
+<td>{{ financial_level }}</td>
+
+</tr>
+
+<tr>
+
+<td>👨‍👩‍👧 Social Support</td>
+
+<td>{{ social_level }}</td>
+
+</tr>
+
+</table>
+
+<br>
+
+<h2>📈 Assessment Information</h2>
+
+<table class="summary-table">
+
+<tr>
+
+<th>Item</th>
+
+<th>Value</th>
+
+</tr>
+
+<tr>
+
+<td>Study Hours</td>
+
+<td>{{ study_hours }} Hours</td>
+
+</tr>
+
+<tr>
+
+<td>Sleep Duration</td>
+
+<td>{{ sleep_hours }} Hours</td>
+
+</tr>
+
+<tr>
+
+<td>Break Frequency</td>
+
+<td>{{ break_frequency }}</td>
+
+</tr>
+
+</table>
+
+<br>
+
+<h2>💡 Personalised Recommendations</h2>

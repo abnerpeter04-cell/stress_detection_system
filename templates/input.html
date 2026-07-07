@@ -1,8 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
 
-<title>Input Data</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Undergraduate Stress Assessment</title>
 
 <link rel="stylesheet"
 href="{{ url_for('static', filename='style.css') }}">
@@ -16,14 +20,20 @@ href="{{ url_for('static', filename='style.css') }}">
 <div class="sidebar">
 
 <div class="logo">
-Stress Detection
+
+Stress Detection System
+
 </div>
 
 <ul>
+
 <li><a href="/dashboard">Dashboard</a></li>
-<li><a href="/input">Input Data</a></li>
-<li><a href="/result">Prediction Result</a></li>
-<li><a href="/advice">Advice Center</a></li>
+<li><a href="/input">Stress Assessment</a></li>
+<li><a href="/history">History</a></li>
+<li><a href="/advice">Advice Centre</a></li>
+<li><a href="/chatbot">Assessment Chatbot</a></li>
+<li><a href="/logout">Logout</a></li>
+
 </ul>
 
 </div>
@@ -32,24 +42,37 @@ Stress Detection
 
 <div class="form-container">
 
-<h2>Input Your Data</h2>
+<h2>Undergraduate Stress Assessment Form</h2>
 
-<br>
+<p>
+
+Please complete all sections below.
+Your responses will be analysed to determine your stress level and provide personalised recommendations.
+
+</p>
 
 <form action="/predict" method="POST">
 
+<!-- ============================== -->
+<!-- ACADEMIC INFORMATION -->
+<!-- ============================== -->
+
+<h3>📚 Academic Information</h3>
+
 <div class="form-group">
 
-<label>Study Hours</label>
+<label>Study Hours Per Day</label>
 
 <select name="study_hours">
 
-<option>1</option>
-<option>2</option>
-<option>3</option>
-<option>4</option>
-<option>5</option>
-<option>6</option>
+<option value="1">1 Hour</option>
+<option value="2">2 Hours</option>
+<option value="3">3 Hours</option>
+<option value="4">4 Hours</option>
+<option value="5">5 Hours</option>
+<option value="6">6 Hours</option>
+<option value="7">7 Hours</option>
+<option value="8">8+ Hours</option>
 
 </select>
 
@@ -57,11 +80,10 @@ Stress Detection
 
 <div class="form-group">
 
-<label>Sleep Duration</label>
+<label>Number of Courses Registered</label>
 
-<select name="sleep_hours">
+<select name="courses">
 
-<option>3</option>
 <option>4</option>
 <option>5</option>
 <option>6</option>
@@ -74,22 +96,317 @@ Stress Detection
 
 <div class="form-group">
 
-<label>Break Frequency</label>
+<label>Assignment Workload</label>
 
-<select name="break_frequency">
+<select name="workload">
 
-<option>1</option>
-<option>2</option>
-<option>3</option>
-<option>4</option>
+<option value="1">Low</option>
+<option value="2">Moderate</option>
+<option value="3">High</option>
 
 </select>
 
 </div>
 
+<div class="form-group">
+
+<label>Upcoming Examination</label>
+
+<select name="exam">
+
+<option value="1">Yes</option>
+<option value="0">No</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+
+<label>Class Attendance</label>
+
+<select name="attendance">
+
+<option>Excellent</option>
+<option>Good</option>
+<option>Average</option>
+<option>Poor</option>
+
+</select>
+
+</div>
+
+<hr>
+
+<!-- ============================== -->
+<!-- HEALTH & LIFESTYLE -->
+<!-- ============================== -->
+
+<h3>😴 Health & Lifestyle</h3>
+
+<div class="form-group">
+
+<label>Sleep Duration (Hours)</label>
+
+<select name="sleep_hours">
+
+<option value="3">3 Hours</option>
+<option value="4">4 Hours</option>
+<option value="5">5 Hours</option>
+<option value="6">6 Hours</option>
+<option value="7">7 Hours</option>
+<option value="8">8 Hours</option>
+<option value="9">9+ Hours</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+
+<label>Study Break Frequency</label>
+
+<select name="break_frequency">
+
+<option value="1">Rarely</option>
+<option value="2">Sometimes</option>
+<option value="3">Often</option>
+<option value="4">Very Often</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+
+<label>Exercise Per Week</label>
+
+<select name="exercise">
+
+<option value="0">Never</option>
+<option value="1">1–2 Times</option>
+<option value="2">3–4 Times</option>
+<option value="3">5+ Times</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+
+<label>Meals Per Day</label>
+
+<select name="meals">
+
+<option value="1">1 Meal</option>
+<option value="2">2 Meals</option>
+<option value="3">3 Meals</option>
+<option value="4">More than 3 Meals</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+
+<label>Daily Screen Time</label>
+
+<select name="screen_time">
+
+<option value="2">Less than 2 Hours</option>
+<option value="4">2–4 Hours</option>
+<option value="6">4–6 Hours</option>
+<option value="8">More than 6 Hours</option>
+
+</select>
+
+</div>
+
+<hr>
+
+<!-- ============================== -->
+<!-- MENTAL WELLBEING -->
+<!-- ============================== -->
+
+<h3>🧠 Mental Wellbeing</h3>
+
+<div class="form-group">
+
+<label>Anxiety Level</label>
+
+<select name="anxiety">
+
+<option value="1">Very Low</option>
+<option value="2">Low</option>
+<option value="3">Moderate</option>
+<option value="4">High</option>
+<option value="5">Very High</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+
+<label>Motivation Level</label>
+
+<select name="motivation">
+
+<option value="1">Very Low</option>
+<option value="2">Low</option>
+<option value="3">Moderate</option>
+<option value="4">High</option>
+<option value="5">Very High</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+
+<label>Concentration Level</label>
+
+<select name="concentration">
+
+<option value="1">Very Poor</option>
+<option value="2">Poor</option>
+<option value="3">Average</option>
+<option value="4">Good</option>
+<option value="5">Excellent</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+
+<label>Current Mood</label>
+
+<select name="mood">
+
+<option value="1">Very Sad</option>
+<option value="2">Sad</option>
+<option value="3">Neutral</option>
+<option value="4">Happy</option>
+<option value="5">Very Happy</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+
+<label>Energy Level</label>
+
+<select name="energy">
+
+<option value="1">Very Low</option>
+<option value="2">Low</option>
+<option value="3">Average</option>
+<option value="4">High</option>
+<option value="5">Very High</option>
+
+</select>
+
+</div>
+
+<hr>
+
+<!-- ============================== -->
+<!-- FINANCIAL INFORMATION -->
+<!-- ============================== -->
+
+<h3>💰 Financial Information</h3>
+
+<div class="form-group">
+
+<label>Financial Stress</label>
+
+<select name="financial_stress">
+
+<option value="1">Very Low</option>
+<option value="2">Low</option>
+<option value="3">Moderate</option>
+<option value="4">High</option>
+<option value="5">Very High</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+
+<label>Is Your Allowance Sufficient?</label>
+
+<select name="allowance">
+
+<option value="1">Yes</option>
+<option value="0">No</option>
+
+</select>
+
+</div>
+
+<hr>
+
+<!-- ============================== -->
+<!-- SOCIAL SUPPORT -->
+<!-- ============================== -->
+
+<h3>👨‍👩‍👧 Social Support</h3>
+
+<div class="form-group">
+
+<label>Family Support</label>
+
+<select name="family_support">
+
+<option value="1">Very Poor</option>
+<option value="2">Poor</option>
+<option value="3">Average</option>
+<option value="4">Good</option>
+<option value="5">Excellent</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+
+<label>Friend Support</label>
+
+<select name="friend_support">
+
+<option value="1">Very Poor</option>
+<option value="2">Poor</option>
+<option value="3">Average</option>
+<option value="4">Good</option>
+<option value="5">Excellent</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+
+<label>Social Activities Per Week</label>
+
+<select name="social_activity">
+
+<option value="0">None</option>
+<option value="1">1–2 Activities</option>
+<option value="2">3–4 Activities</option>
+<option value="3">More than 4 Activities</option>
+
+</select>
+
+</div>
+
+<br>
+
 <button type="submit">
 
-Submit for Prediction
+📝 Submit Stress Assessment
 
 </button>
 
@@ -102,4 +419,5 @@ Submit for Prediction
 </div>
 
 </body>
+
 </html>

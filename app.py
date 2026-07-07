@@ -4,10 +4,11 @@ import joblib
 import numpy as np
 from datetime import datetime
 from assessment_agent import StressAssessmentAgent
+from werkzeug.security import generate_password_hash, check_password_hash
 import os
 
 # =========================================
-# FLASK APP
+# FLASK APPLICATION
 # =========================================
 
 app = Flask(__name__)
@@ -21,7 +22,6 @@ model = joblib.load("model.pkl")
 
 # =========================================
 # CHATBOT AGENTS
-# Each logged-in user gets their own agent
 # =========================================
 
 agents = {}
@@ -40,7 +40,7 @@ def get_db_connection():
 
 # =========================================
 # HOME PAGE
-# Opens Registration First
+# Registration Opens First
 # =========================================
 
 @app.route("/")
@@ -79,43 +79,41 @@ def register_user():
     username = request.form["username"].strip()
     password = request.form["password"].strip()
 
+    if username == "" or password == "":
+
+        return "Username and Password are required."
+
     conn = get_db_connection()
 
     existing = conn.execute(
-
         """
         SELECT *
         FROM users
         WHERE username=?
         """,
-
         (username,)
-
     ).fetchone()
 
     if existing:
 
         conn.close()
+        return "Username already exists."
 
-        return "Username already exists. Please choose another."
+    hashed_password = generate_password_hash(password)
 
     conn.execute(
-
         """
         INSERT INTO users
         (
             username,
             password
         )
-
         VALUES (?, ?)
         """,
-
         (
             username,
-            password
+            hashed_password
         )
-
     )
 
     conn.commit()
@@ -137,26 +135,23 @@ def login():
     conn = get_db_connection()
 
     user = conn.execute(
-
         """
         SELECT *
         FROM users
         WHERE username=?
-        AND password=?
         """,
-
-        (
-            username,
-            password
-        )
-
+        (username,)
     ).fetchone()
 
     conn.close()
 
-    if not user:
+    if user is None:
 
-        return "Invalid Login Details"
+        return "Invalid Username or Password."
+
+    if not check_password_hash(user["password"], password):
+
+        return "Invalid Username or Password."
 
     session["username"] = username
 
@@ -178,91 +173,37 @@ def dashboard():
 
     conn = get_db_connection()
 
+    # Total Predictions
     total = conn.execute(
-
         """
         SELECT COUNT(*)
         FROM predictions
         WHERE username=?
         """,
-
         (username,)
-
     ).fetchone()[0]
 
+    # Total Stressed
     stressed = conn.execute(
-
         """
         SELECT COUNT(*)
         FROM predictions
         WHERE username=?
         AND prediction='STRESSED'
         """,
-
         (username,)
-
     ).fetchone()[0]
 
+    # Total Not Stressed
     not_stressed = conn.execute(
-
         """
         SELECT COUNT(*)
         FROM predictions
         WHERE username=?
         AND prediction='NOT STRESSED'
         """,
-
         (username,)
-
     ).fetchone()[0]
-
-    history = conn.execute(
-
-        """
-        SELECT *
-        FROM predictions
-        WHERE username=?
-        ORDER BY id DESC
-        LIMIT 5
-        """,
-
-        (username,)
-
-    ).fetchall()
-
-    if total > 0:
-
-        stress_rate = round(
-
-            (stressed / total) * 100,
-
-            1
-
-        )
-
-    else:
-
-        stress_rate = 0
-
-    conn.close()
-
-    return render_template(
-
-        "dashboard.html",
-
-        username=username,
-
-        total=total,
-
-        stressed=stressed,
-
-        not_stressed=not_stressed,
-
-        stress_rate=stress_rate,
-
-        history=history
-
-    )
 # =========================================
 # PREDICTION SYSTEM
 # =========================================
@@ -275,9 +216,55 @@ def predict():
 
     username = session["username"]
 
+    # ==========================
+    # ACADEMIC INFORMATION
+    # ==========================
+
     study_hours = float(request.form["study_hours"])
     sleep_hours = float(request.form["sleep_hours"])
     break_frequency = float(request.form["break_frequency"])
+
+    courses = int(request.form["courses"])
+    workload = int(request.form["workload"])
+    exam = int(request.form["exam"])
+    attendance = request.form["attendance"]
+
+    # ==========================
+    # HEALTH & LIFESTYLE
+    # ==========================
+
+    exercise = int(request.form["exercise"])
+    meals = int(request.form["meals"])
+    screen_time = int(request.form["screen_time"])
+
+    # ==========================
+    # MENTAL WELLBEING
+    # ==========================
+
+    anxiety = int(request.form["anxiety"])
+    motivation = int(request.form["motivation"])
+    concentration = int(request.form["concentration"])
+    mood = int(request.form["mood"])
+    energy = int(request.form["energy"])
+
+    # ==========================
+    # FINANCIAL
+    # ==========================
+
+    financial_stress = int(request.form["financial_stress"])
+    allowance = int(request.form["allowance"])
+
+    # ==========================
+    # SOCIAL
+    # ==========================
+
+    family_support = int(request.form["family_support"])
+    friend_support = int(request.form["friend_support"])
+    social_activity = int(request.form["social_activity"])
+
+    # ==========================
+    # MACHINE LEARNING PREDICTION
+    # ==========================
 
     features = np.array([
         [study_hours, sleep_hours, break_frequency]
@@ -286,37 +273,142 @@ def predict():
     prediction = model.predict(features)
 
     if prediction[0] == 1:
-
         result = "STRESSED"
-
-        recommendations = [
-
-            "Take short study breaks regularly.",
-            "Improve your sleeping pattern.",
-            "Avoid academic overload.",
-            "Practice relaxation techniques.",
-            "Stay hydrated and eat healthy meals."
-
-        ]
-
     else:
-
         result = "NOT STRESSED"
 
-        recommendations = [
+    # ==========================
+    # CALCULATE SCORES
+    # ==========================
 
-            "Maintain your healthy routine.",
-            "Continue balancing study and rest.",
-            "Keep practicing proper time management.",
-            "Stay physically active."
+    academic_score = study_hours + courses + workload + exam
 
-        ]
+    health_score = (
+        sleep_hours +
+        break_frequency +
+        exercise +
+        meals
+    )
+
+    mental_score = (
+        anxiety +
+        motivation +
+        concentration +
+        mood +
+        energy
+    )
+
+    financial_score = (
+        financial_stress +
+        allowance
+    )
+
+    social_score = (
+        family_support +
+        friend_support +
+        social_activity
+    )
+
+    # ==========================
+    # STRESS LEVEL FUNCTION
+    # ==========================
+
+    def level(score, low, medium):
+
+        if score <= low:
+            return "LOW"
+
+        elif score <= medium:
+            return "MODERATE"
+
+        else:
+            return "HIGH"
+
+    academic_level = level(academic_score, 10, 16)
+    health_level = level(health_score, 8, 13)
+    mental_level = level(mental_score, 10, 18)
+    financial_level = level(financial_score, 3, 6)
+    social_level = level(social_score, 5, 9)
+
+    # ==========================
+    # RECOMMENDATIONS
+    # ==========================
+
+    recommendations = []
+
+    if academic_level == "HIGH":
+        recommendations.append(
+            "📚 Reduce academic workload and create a realistic study timetable."
+        )
+
+    if health_level == "HIGH":
+        recommendations.append(
+            "😴 Improve your sleep schedule, eat balanced meals and exercise regularly."
+        )
+
+    if mental_level == "HIGH":
+        recommendations.append(
+            "🧠 Practice relaxation techniques and consider speaking with a counsellor."
+        )
+
+    if financial_level == "HIGH":
+        recommendations.append(
+            "💰 Seek financial assistance or improve budgeting to reduce financial stress."
+        )
+
+    if social_level == "HIGH":
+        recommendations.append(
+            "👨‍👩‍👧 Spend more time with supportive friends and family."
+        )
+
+    if result == "STRESSED":
+        recommendations.append(
+            "🎯 Your assessment indicates elevated stress. Consider visiting your university counselling centre if symptoms persist."
+        )
+
+    if len(recommendations) == 0:
+        recommendations.append(
+            "✅ Great job! Continue maintaining your healthy lifestyle and study habits."
+        )
+
+    if health_level == "HIGH":
+        recommendations.append(
+            "😴 Improve your sleep schedule, eat balanced meals and exercise regularly."
+        )
+
+    if mental_level == "HIGH":
+        recommendations.append(
+            "🧠 Practice relaxation techniques and consider speaking with a counsellor."
+        )
+
+    if financial_level == "HIGH":
+        recommendations.append(
+            "💰 Seek financial assistance or improve budgeting to reduce financial stress."
+        )
+
+    if social_level == "HIGH":
+        recommendations.append(
+            "👨‍👩‍👧 Spend more time with supportive friends and family members."
+        )
+
+    if result == "STRESSED":
+        recommendations.append(
+            "🎯 Overall assessment indicates elevated stress. Consider visiting your university counselling centre if symptoms persist."
+        )
+
+    if len(recommendations) == 0:
+
+        recommendations.append(
+            "✅ Great job! Your responses suggest healthy stress management habits. Continue maintaining a balanced lifestyle."
+        )
+    # ==========================
+    # SAVE PREDICTION
+    # ==========================
 
     conn = get_db_connection()
 
     conn.execute(
-
-        """
+        '''
         INSERT INTO predictions
         (
             username,
@@ -326,34 +418,42 @@ def predict():
             prediction,
             date
         )
-
         VALUES (?, ?, ?, ?, ?, ?)
-        """,
-
+        ''',
         (
-
             username,
             study_hours,
             sleep_hours,
             break_frequency,
             result,
             datetime.now().strftime("%Y-%m-%d %H:%M")
-
         )
-
     )
 
     conn.commit()
     conn.close()
 
+    # ==========================
+    # DISPLAY RESULT
+    # ==========================
+
     return render_template(
 
-        "result.html",
+        'result.html',
 
         prediction=result,
 
-        recommendations=recommendations
+        academic_level=academic_level,
+        health_level=health_level,
+        mental_level=mental_level,
+        financial_level=financial_level,
+        social_level=social_level,
 
+        study_hours=study_hours,
+        sleep_hours=sleep_hours,
+        break_frequency=break_frequency,
+
+        recommendations=recommendations
     )
 
 
